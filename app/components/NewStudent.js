@@ -4,7 +4,7 @@ import { thunkToAddAStudentCreator } from '../reducers/studentsReducer';
 import StudentForm from './StudentForm';
 
 const mapStateToProps = state => {
-  return { errorMessage: state.studentsReducer.errorMessage };
+  return { errorMessage: state.errorsReducer.errorMessage };
 };
 
 const mapDispatchToProps = dispatch => {

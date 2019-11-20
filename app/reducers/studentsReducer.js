@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { initialState } from './index';
+import { gotError, resetError } from '../reducers/errorsReducer';
 
 // Action Types
 const GOT_ALL_STUDENTS = 'GOT_ALL_STUDENTS_SUCCESSFULLY';
 const GOT_A_STUDENT = 'GOT_A_STUDENT_SUCCESSFULLY';
 const ADDED_A_STUDENT = 'ADDED_A_STUDENT_SUCCESSFULLY';
 const DELETED_A_STUDENT = 'DELETED_A_STUDENT_SUCCESSFULLY';
-const GOT_ERROR = 'GOT_ERROR';
 
 // Action Creators
 const gotAllStudents = students => ({
@@ -24,10 +24,6 @@ const addedAStudent = student => ({
 const deletedAStudent = student => ({
   type: DELETED_A_STUDENT,
   student,
-});
-const gotError = errorMessage => ({
-  type: GOT_ERROR,
-  errorMessage,
 });
 
 // Thunk Creators
@@ -48,6 +44,7 @@ export const thunkToAddAStudentCreator = function(newStudent) {
     try {
       const { data } = await axios.post('/api/students', newStudent);
       dispatch(addedAStudent(data));
+      dispatch(resetError());
     } catch (error) {
       dispatch(gotError(error.response.data));
     }
@@ -58,6 +55,7 @@ export const thunkToDeleteAStudentCreator = function(studentToDelete) {
     try {
       await axios.delete(`/api/students/${studentToDelete.id}`);
       dispatch(deletedAStudent(studentToDelete));
+      dispatch(resetError());
     } catch (error) {
       dispatch(gotError(error.response.data));
     }
@@ -75,7 +73,6 @@ function studentsReducer(state = initialState, action) {
       return {
         ...state,
         students: [...state.students, action.student],
-        errorMessage: '',
       };
     case DELETED_A_STUDENT:
       return {
@@ -83,10 +80,7 @@ function studentsReducer(state = initialState, action) {
         students: state.students.filter(
           student => student.id !== action.student.id
         ),
-        errorMessage: '',
       };
-    case GOT_ERROR:
-      return { ...state, errorMessage: action.errorMessage };
     default:
       return state;
   }
