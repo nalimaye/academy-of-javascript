@@ -44,7 +44,7 @@ class SingleStudent extends React.Component {
         <p>GPA: {student.gpa}</p>
 
         <div>
-          {student.campus !== undefined ? (
+          {student.campus !== undefined && student.campus !== null ? (
             <p>
               This student is registered to the campus:{' '}
               <Link to={`/campuses/${student.campusId}`}>

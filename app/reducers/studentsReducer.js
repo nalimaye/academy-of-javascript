@@ -6,6 +6,7 @@ const GOT_ALL_STUDENTS = 'GOT_ALL_STUDENTS_SUCCESSFULLY';
 const GOT_A_STUDENT = 'GOT_A_STUDENT_SUCCESSFULLY';
 const ADDED_A_STUDENT = 'ADDED_A_STUDENT_SUCCESSFULLY';
 const DELETED_A_STUDENT = 'DELETED_A_STUDENT_SUCCESSFULLY';
+const GOT_ERROR = 'GOT_ERROR';
 
 // Action Creators
 const gotAllStudents = students => ({
@@ -24,6 +25,10 @@ const deletedAStudent = student => ({
   type: DELETED_A_STUDENT,
   student,
 });
+const gotError = errorMessage => ({
+  type: GOT_ERROR,
+  errorMessage,
+});
 
 // Thunk Creators
 export const thunkToGetStudentsCreator = function() {
@@ -40,8 +45,12 @@ export const thunkToGetAStudentCreator = function(studentId) {
 };
 export const thunkToAddAStudentCreator = function(newStudent) {
   return async function(dispatch) {
-    const { data } = await axios.post('/api/students', newStudent);
-    dispatch(addedAStudent(data));
+    try {
+      const { data } = await axios.post('/api/students', newStudent);
+      dispatch(addedAStudent(data));
+    } catch (error) {
+      dispatch(gotError(error.response.data));
+    }
   };
 };
 export const thunkToDeleteAStudentCreator = function(studentToDelete) {
@@ -59,7 +68,11 @@ function studentsReducer(state = initialState, action) {
     case GOT_A_STUDENT:
       return { ...state, student: action.student };
     case ADDED_A_STUDENT:
-      return { ...state, students: [...state.students, action.student] };
+      return {
+        ...state,
+        students: [...state.students, action.student],
+        errorMessage: '',
+      };
     case DELETED_A_STUDENT:
       return {
         ...state,
@@ -67,6 +80,8 @@ function studentsReducer(state = initialState, action) {
           student => student.id !== action.student.id
         ),
       };
+    case GOT_ERROR:
+      return { ...state, errorMessage: action.errorMessage };
     default:
       return state;
   }

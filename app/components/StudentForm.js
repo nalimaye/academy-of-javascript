@@ -52,6 +52,7 @@ const StudentForm = props => {
         >
           * Field is required !
         </span>
+        <span className="warning">{props.errorMessage}</span>
       </p>
       <p>
         <button

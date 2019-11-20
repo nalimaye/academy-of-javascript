@@ -3,6 +3,10 @@ import { connect } from 'react-redux';
 import { thunkToAddAStudentCreator } from '../reducers/studentsReducer';
 import StudentForm from './StudentForm';
 
+const mapStateToProps = state => {
+  return { errorMessage: state.studentsReducer.errorMessage };
+};
+
 const mapDispatchToProps = dispatch => {
   return {
     thunkToAddAStudentCreator: newStudent =>
@@ -30,16 +34,28 @@ class NewStudent extends React.Component {
     });
   }
 
-  handleSubmit(event) {
+  async handleSubmit(event) {
     event.preventDefault();
-    this.props.thunkToAddAStudentCreator(this.state);
-    this.setState(defaultState);
+
+    const newStudent = {
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      email: this.state.email,
+    };
+    await this.props.thunkToAddAStudentCreator(newStudent);
+
+    const { errorMessage } = this.props;
+    if (errorMessage === '') {
+      this.setState(defaultState);
+    }
   }
 
   render() {
+    const { errorMessage } = this.props;
     return (
       <StudentForm
         {...this.state}
+        errorMessage={errorMessage}
         handleChange={this.handleChange}
         handleSubmit={this.handleSubmit}
         buttonName="Add This Student"
@@ -48,9 +64,9 @@ class NewStudent extends React.Component {
   }
 }
 
-const DisconnectedNewStudent = connect(
-  null,
+const ConnectedNewStudent = connect(
+  mapStateToProps,
   mapDispatchToProps
 )(NewStudent);
 
-export default DisconnectedNewStudent;
+export default ConnectedNewStudent;

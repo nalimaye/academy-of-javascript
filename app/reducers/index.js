@@ -8,6 +8,7 @@ export const initialState = {
   campus: {},
   students: [],
   student: {},
+  errorMessage: '',
 };
 
 const rootReducer = combineReducers({ campusesReducer, studentsReducer });

@@ -28,7 +28,6 @@ const Student = db.define(
     },
     imageUrl: {
       type: Sequelize.STRING,
-      defaultValue: 'https://www.fullstackacademy.com/',
     },
     gpa: {
       type: Sequelize.DECIMAL,
