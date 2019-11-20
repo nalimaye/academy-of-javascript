@@ -55,8 +55,12 @@ export const thunkToAddAStudentCreator = function(newStudent) {
 };
 export const thunkToDeleteAStudentCreator = function(studentToDelete) {
   return async function(dispatch) {
-    await axios.delete(`/api/students/${studentToDelete.id}`);
-    dispatch(deletedAStudent(studentToDelete));
+    try {
+      await axios.delete(`/api/students/${studentToDelete.id}`);
+      dispatch(deletedAStudent(studentToDelete));
+    } catch (error) {
+      dispatch(gotError(error.response.data));
+    }
   };
 };
 
@@ -79,6 +83,7 @@ function studentsReducer(state = initialState, action) {
         students: state.students.filter(
           student => student.id !== action.student.id
         ),
+        errorMessage: '',
       };
     case GOT_ERROR:
       return { ...state, errorMessage: action.errorMessage };
