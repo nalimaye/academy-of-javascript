@@ -52,7 +52,7 @@ class SingleCampus extends React.Component {
 
     return campus !== undefined ? (
       <div id="aCampus">
-        <img src={campus.imageUrl} />
+        <img className="imageLarge" src={campus.imageUrl} />
         <h2>{campus.name}</h2>
         <span>{campus.address}</span>
         <hr />
