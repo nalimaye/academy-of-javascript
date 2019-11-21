@@ -150,3 +150,8 @@ h4 {
   flex-direction: column;
   justify-content: space-evenly;
 }
+
+#aStudentInfoButtons {
+  display: flex;
+  justify-content: space-evenly;
+}

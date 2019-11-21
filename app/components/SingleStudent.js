@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
   thunkToGetAStudentCreator,
+  thunkToUpdateAStudentCreator,
   thunkToDeleteAStudentCreator,
 } from '../reducers/studentsReducer';
+import ConnectedUpdateStudent from './UpdateStudent';
 
 const mapStateToProps = state => {
   return { student: state.studentsReducer.student };
@@ -14,6 +16,8 @@ const mapDispatchToProps = dispatch => {
   return {
     thunkToGetAStudentCreator: studentId =>
       dispatch(thunkToGetAStudentCreator(studentId)),
+    thunkToUpdateAStudentCreator: studentToUpdate =>
+      dispatch(thunkToUpdateAStudentCreator(studentToUpdate)),
     thunkToDeleteAStudentCreator: studentToDelete =>
       dispatch(thunkToDeleteAStudentCreator(studentToDelete)),
   };
@@ -22,11 +26,20 @@ const mapDispatchToProps = dispatch => {
 class SingleStudent extends React.Component {
   constructor() {
     super();
+    this.state = {
+      isClicked: false,
+    };
+    this.handleClick = this.handleClick.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
   }
 
   componentDidMount() {
     this.props.thunkToGetAStudentCreator(this.props.match.params.studentId);
+  }
+
+  handleClick(event) {
+    event.preventDefault();
+    this.setState({ isClicked: true });
   }
 
   handleDelete() {
@@ -36,6 +49,7 @@ class SingleStudent extends React.Component {
 
   render() {
     const { student } = this.props;
+
     return student !== undefined ? (
       <div id="aStudent">
         <img className="imageBig" src={student.imageUrl} />
@@ -55,14 +69,29 @@ class SingleStudent extends React.Component {
             <p>Currently, this student is not registered to a campus.</p>
           )}
         </div>
-        <button
-          id="delete"
-          type="button"
-          name="deleteStudent"
-          onClick={this.handleDelete}
-        >
-          Delete This Student
-        </button>
+        <div id="aStudentInfoButtons">
+          {this.state.isClicked === false ? (
+            <button
+              id="update"
+              type="submit"
+              name="updateStudent"
+              onClick={this.handleClick}
+            >
+              Update This Student
+            </button>
+          ) : null}
+          {this.state.isClicked === true ? (
+            <ConnectedUpdateStudent student={student} />
+          ) : null}
+          <button
+            id="delete"
+            type="button"
+            name="deleteStudent"
+            onClick={this.handleDelete}
+          >
+            Delete This Student
+          </button>
+        </div>
       </div>
     ) : (
       <div>

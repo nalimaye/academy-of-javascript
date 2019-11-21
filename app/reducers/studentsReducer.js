@@ -7,6 +7,7 @@ const GOT_ALL_STUDENTS = 'GOT_ALL_STUDENTS_SUCCESSFULLY';
 const GOT_A_STUDENT = 'GOT_A_STUDENT_SUCCESSFULLY';
 const ADDED_A_STUDENT = 'ADDED_A_STUDENT_SUCCESSFULLY';
 const DELETED_A_STUDENT = 'DELETED_A_STUDENT_SUCCESSFULLY';
+const UPDATED_A_STUDENT = 'UPDATED_A_STUDENT_SUCCESSFULLY';
 
 // Action Creators
 const gotAllStudents = students => ({
@@ -23,6 +24,10 @@ const addedAStudent = student => ({
 });
 const deletedAStudent = student => ({
   type: DELETED_A_STUDENT,
+  student,
+});
+const updatedAStudent = student => ({
+  type: UPDATED_A_STUDENT,
   student,
 });
 
@@ -61,6 +66,20 @@ export const thunkToDeleteAStudentCreator = function(studentToDelete) {
     }
   };
 };
+export const thunkToUpdateAStudentCreator = function(studentToUpdate) {
+  return async function(dispatch) {
+    try {
+      const { data } = await axios.put(
+        `/api/students/${studentToUpdate.id}`,
+        studentToUpdate
+      );
+      dispatch(updatedAStudent(data));
+      dispatch(resetError());
+    } catch (error) {
+      dispatch(gotError(error.response.data));
+    }
+  };
+};
 
 // Reducer
 function studentsReducer(state = initialState, action) {
@@ -80,6 +99,14 @@ function studentsReducer(state = initialState, action) {
         students: state.students.filter(
           student => student.id !== action.student.id
         ),
+      };
+    case UPDATED_A_STUDENT:
+      return {
+        ...state,
+        students: state.students.map(student => {
+          if (student.id !== action.student.id) return student;
+          else return action.student;
+        }),
       };
     default:
       return state;
