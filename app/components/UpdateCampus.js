@@ -61,9 +61,9 @@ class UpdateCampus extends React.Component {
   }
 }
 
-const DisconnectedUpdateCampus = connect(
-  null,
+const ConnectedUpdateCampus = connect(
+  mapStateToProps,
   mapDispatchToProps
 )(UpdateCampus);
 
-export default DisconnectedUpdateCampus;
+export default ConnectedUpdateCampus;

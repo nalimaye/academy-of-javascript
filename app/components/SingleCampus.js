@@ -6,7 +6,7 @@ import {
   thunkToDeleteACampusCreator,
 } from '../reducers/campusesReducer';
 import StudentsList from './StudentsList';
-import DisconnectedUpdateCampus from './UpdateCampus';
+import ConnectedUpdateCampus from './UpdateCampus';
 
 const mapStateToProps = state => {
   return { campus: state.campusesReducer.campus };
@@ -75,7 +75,7 @@ class SingleCampus extends React.Component {
               </button>
             ) : null}
             {this.state.isClicked === true ? (
-              <DisconnectedUpdateCampus campus={campus} />
+              <ConnectedUpdateCampus campus={campus} />
             ) : null}
             <button
               id="delete"
