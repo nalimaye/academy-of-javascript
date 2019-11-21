@@ -32,6 +32,15 @@ const CampusForm = props => {
         />
       </p>
       <p>
+        <label htmlFor="imageUrl">Image URL : </label>
+        <input
+          name="imageUrl"
+          type="text"
+          value={props.imageUrl}
+          onChange={props.handleChange}
+        />
+      </p>
+      <p>
         <label htmlFor="description">Description : </label>
         <textarea
           name="description"

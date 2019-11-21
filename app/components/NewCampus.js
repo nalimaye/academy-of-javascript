@@ -17,6 +17,7 @@ const mapDispatchToProps = dispatch => {
 const defaultState = {
   name: '',
   address: '',
+  imageUrl: '',
   description: '',
 };
 
