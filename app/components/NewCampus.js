@@ -3,6 +3,10 @@ import { connect } from 'react-redux';
 import { thunkToAddACampusCreator } from '../reducers/campusesReducer';
 import CampusForm from './CampusForm';
 
+const mapStateToProps = state => {
+  return { errorMessage: state.errorsReducer.errorMessage };
+};
+
 const mapDispatchToProps = dispatch => {
   return {
     thunkToAddACampusCreator: newCampus =>
@@ -30,15 +34,23 @@ class NewCampus extends React.Component {
     });
   }
 
-  handleSubmit(event) {
+  async handleSubmit(event) {
     event.preventDefault();
-    this.props.thunkToAddACampusCreator(this.state);
-    this.setState(defaultState);
+
+    await this.props.thunkToAddACampusCreator(this.state);
+
+    const { errorMessage } = this.props;
+    if (errorMessage === '') {
+      this.setState(defaultState);
+    }
   }
+
   render() {
+    const { errorMessage } = this.props;
     return (
       <CampusForm
         {...this.state}
+        errorMessage={errorMessage}
         handleChange={this.handleChange}
         handleSubmit={this.handleSubmit}
         buttonName="Add This Campus"
@@ -47,9 +59,9 @@ class NewCampus extends React.Component {
   }
 }
 
-const DisconnectedNewCampus = connect(
-  null,
+const ConnectedNewCampus = connect(
+  mapStateToProps,
   mapDispatchToProps
 )(NewCampus);
 
-export default DisconnectedNewCampus;
+export default ConnectedNewCampus;

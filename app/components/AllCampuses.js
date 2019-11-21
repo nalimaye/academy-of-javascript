@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { thunkToGetCampusesCreator } from '../reducers/campusesReducer';
 import { List } from './utils';
-import DisconnectedNewCampus from './NewCampus';
+import ConnectedNewCampus from './NewCampus';
 
 const mapStateToProps = state => {
   return { campuses: state.campusesReducer.campuses };
@@ -50,7 +50,7 @@ class AllCampuses extends React.Component {
         </div>
         <hr />
         <div id="add-new-campus">
-          <DisconnectedNewCampus />
+          <ConnectedNewCampus />
         </div>
       </div>
     );

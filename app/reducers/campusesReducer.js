@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { initialState } from './index';
+import { gotError, resetError } from '../reducers/errorsReducer';
 
 // Action Types
 const GOT_ALL_CAMPUSES = 'GOT_ALL_CAMPUSES_SUCCESSFULLY';
@@ -45,23 +46,38 @@ export const thunkToGetACampusCreator = function(campusId) {
 };
 export const thunkToAddACampusCreator = function(newCampus) {
   return async function(dispatch) {
-    const { data } = await axios.post('/api/campuses', newCampus);
-    dispatch(addedACampus(data));
+    try {
+      const { data } = await axios.post('/api/campuses', newCampus);
+      dispatch(addedACampus(data));
+      dispatch(resetError());
+    } catch (error) {
+      dispatch(gotError(error.response.data));
+    }
   };
 };
 export const thunkToDeleteACampusCreator = function(campusToDelete) {
   return async function(dispatch) {
-    await axios.delete(`/api/campuses/${campusToDelete.id}`);
-    dispatch(deletedACampus(campusToDelete));
+    try {
+      await axios.delete(`/api/campuses/${campusToDelete.id}`);
+      dispatch(deletedACampus(campusToDelete));
+      dispatch(resetError());
+    } catch (error) {
+      dispatch(gotError(error.response.data));
+    }
   };
 };
 export const thunkToUpdateACampusCreator = function(campusToUpdate) {
   return async function(dispatch) {
-    const { data } = await axios.put(
-      `/api/campuses/${campusToUpdate.id}`,
-      campusToUpdate
-    );
-    dispatch(updatedACampus(data));
+    try {
+      const { data } = await axios.put(
+        `/api/campuses/${campusToUpdate.id}`,
+        campusToUpdate
+      );
+      dispatch(updatedACampus(data));
+      dispatch(resetError());
+    } catch (error) {
+      dispatch(gotError(error.response.data));
+    }
   };
 };
 

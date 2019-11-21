@@ -45,6 +45,7 @@ const CampusForm = props => {
         <span className="warning" hidden={props.name && props.address}>
           * Field is required !
         </span>
+        <span className="warning">{props.errorMessage}</span>
       </p>
       <p>
         <button

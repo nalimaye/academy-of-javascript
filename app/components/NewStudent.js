@@ -37,12 +37,7 @@ class NewStudent extends React.Component {
   async handleSubmit(event) {
     event.preventDefault();
 
-    const newStudent = {
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
-      email: this.state.email,
-    };
-    await this.props.thunkToAddAStudentCreator(newStudent);
+    await this.props.thunkToAddAStudentCreator(this.state);
 
     const { errorMessage } = this.props;
     if (errorMessage === '') {

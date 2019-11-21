@@ -11,7 +11,6 @@ const Campus = db.define('campus', {
   },
   imageUrl: {
     type: Sequelize.STRING,
-    defaultValue: 'https://www.fullstackacademy.com/',
   },
   address: {
     type: Sequelize.STRING,
