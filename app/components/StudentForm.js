@@ -46,6 +46,32 @@ const StudentForm = props => {
         />
       </p>
       <p>
+        <label htmlFor="imageUrl">Image URL : </label>
+        <input
+          name="imageUrl"
+          type="text"
+          value={props.imageUrl}
+          onChange={props.handleChange}
+        />
+      </p>
+      <p>
+        <label htmlFor="gpa">
+          GPA :{' '}
+          <span
+            className="warning"
+            hidden={0.0 <= props.gpa && props.gpa <= 4.0 && props.gpa !== ''}
+          >
+            Number between 0.0 - 4.0
+          </span>
+        </label>
+        <input
+          name="gpa"
+          type="text"
+          value={props.gpa}
+          onChange={props.handleChange}
+        />
+      </p>
+      <p>
         <span
           className="warning"
           hidden={props.firstName && props.lastName && props.email}

@@ -18,6 +18,8 @@ const defaultState = {
   firstName: '',
   lastName: '',
   email: '',
+  imageUrl: '',
+  gpa: '0.0',
 };
 
 class NewStudent extends React.Component {
