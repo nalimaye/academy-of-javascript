@@ -4,11 +4,12 @@
   "description": "RESTful web app to manage the Students and Campuses of the Academy of JavaScript.",
   "main": "main.js",
   "scripts": {
+    "deploy": "script/deploy",
     "start:dev": "npm run build-watch & npm run start-server",
     "start-server": "nodemon --watch server main.js -e html,js,css",
     "build-watch": "webpack -w",
     "start": "echo 'Running server for production - developers, use npm run start:dev for development' && node main",
-    "seed": "node seed.js"
+    "seed": "node script/seed.js"
   },
   "keywords": [
     "react",

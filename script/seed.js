@@ -1,4 +1,4 @@
-const { db, Campus, Student } = require('./server/db');
+const { db, Campus, Student } = require('../server/db');
 const { green, red } = require('chalk');
 
 const seed = async () => {
