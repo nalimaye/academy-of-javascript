@@ -56,7 +56,7 @@ router.delete('/:studentId', async (req, res, next) => {
   try {
     await Student.destroy({
       where: {
-        id: req.params.studentId,
+        id: { [Op.eq]: req.params.studentId },
       },
     });
     res.sendStatus(204);
