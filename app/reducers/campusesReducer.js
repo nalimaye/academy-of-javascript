@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { initialState } from './index';
-import { gotError, resetError } from '../reducers/errorsReducer';
+import { gotError, resetError } from './errorsReducer';
+import { updatedAStudent } from './studentsReducer';
 
 // Action Types
 const GOT_ALL_CAMPUSES = 'GOT_ALL_CAMPUSES_SUCCESSFULLY';
@@ -22,9 +23,9 @@ const addedACampus = campus => ({
   type: ADDED_A_CAMPUS,
   campus,
 });
-const deletedACampus = campus => ({
+const deletedACampus = campusId => ({
   type: DELETED_A_CAMPUS,
-  campus,
+  campusId,
 });
 const updatedACampus = campus => ({
   type: UPDATED_A_CAMPUS,
@@ -55,11 +56,11 @@ export const thunkToAddACampusCreator = function(newCampus) {
     }
   };
 };
-export const thunkToDeleteACampusCreator = function(campusToDelete) {
+export const thunkToDeleteACampusCreator = function(campusToDeleteId) {
   return async function(dispatch) {
     try {
-      await axios.delete(`/api/campuses/${campusToDelete.id}`);
-      dispatch(deletedACampus(campusToDelete));
+      await axios.delete(`/api/campuses/${campusToDeleteId}`);
+      dispatch(deletedACampus(campusToDeleteId));
       dispatch(resetError());
     } catch (error) {
       dispatch(gotError(error.response.data));
@@ -80,6 +81,42 @@ export const thunkToUpdateACampusCreator = function(campusToUpdate) {
     }
   };
 };
+export const thunkToAddStudentToCampusCreator = function(student, campus) {
+  return async function(dispatch) {
+    try {
+      const studentToAdd = {};
+      Object.assign(studentToAdd, student);
+      studentToAdd.campusId = campusToUpdate.id;
+
+      const campusToUpdate = {};
+      Object.assign(campusToUpdate, campus);
+      campusToUpdate.students.push(studentToAdd);
+
+      const responseStudent = await axios.put(
+        `/api/students/${studentToUpdate.id}`,
+        studentToUpdate
+      );
+      const responseCampus = await axios.put(
+        `/api/campuses/${campusToUpdate.id}`,
+        campusToUpdate
+      );
+
+      // console.log(
+      //   'In thunkToAddStudentToCampusCreator, responseCampus.data : ',
+      //   responseCampus.data
+      // );
+      // console.log(
+      //   'In thunkToAddStudentToCampusCreator, responseStudent.data : ',
+      //   responseStudent.data
+      // );
+      dispatch(updatedAStudent(responseStudent.data));
+      dispatch(updatedACampus(responseCampus.data));
+      dispatch(resetError());
+    } catch (error) {
+      dispatch(gotError(error.response.data));
+    }
+  };
+};
 
 // Reducer
 function campusesReducer(state = initialState, action) {
@@ -93,9 +130,7 @@ function campusesReducer(state = initialState, action) {
     case DELETED_A_CAMPUS:
       return {
         ...state,
-        campuses: state.campuses.filter(
-          campus => campus.id !== action.campus.id
-        ),
+        campuses: state.campuses.filter(campus => campus.id !== action.id),
       };
     case UPDATED_A_CAMPUS:
       return {

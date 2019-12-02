@@ -2,24 +2,27 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
   thunkToGetACampusCreator,
-  thunkToUpdateACampusCreator,
-  thunkToDeleteACampusCreator,
+  thunkToAddStudentToCampusCreator,
 } from '../reducers/campusesReducer';
+import { thunkToGetStudentsCreator } from '../reducers/studentsReducer';
+import { List } from './utils';
 import StudentsList from './StudentsList';
 import ConnectedUpdateCampus from './UpdateCampus';
 
 const mapStateToProps = state => {
-  return { campus: state.campusesReducer.campus };
+  return {
+    campus: state.campusesReducer.campus,
+    students: state.studentsReducer.students,
+  };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     thunkToGetACampusCreator: campusId =>
       dispatch(thunkToGetACampusCreator(campusId)),
-    thunkToUpdateACampusCreator: campusToUpdate =>
-      dispatch(thunkToUpdateACampusCreator(campusToUpdate)),
-    thunkToDeleteACampusCreator: campusToDelete =>
-      dispatch(thunkToDeleteACampusCreator(campusToDelete)),
+    thunkToAddStudentToCampusCreator: (studentToAdd, campus) =>
+      dispatch(thunkToAddStudentToCampusCreator(studentToAdd, campus)),
+    thunkToGetStudentsCreator: () => dispatch(thunkToGetStudentsCreator()),
   };
 };
 
@@ -28,13 +31,16 @@ class SingleCampus extends React.Component {
     super();
     this.state = {
       isClicked: false,
+      studentToAddId: 0,
     };
     this.handleClick = this.handleClick.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleAddStudentToCampus = this.handleAddStudentToCampus.bind(this);
   }
 
   componentDidMount() {
     this.props.thunkToGetACampusCreator(this.props.match.params.campusId);
+    this.props.thunkToGetStudentsCreator();
   }
 
   handleClick(event) {
@@ -42,49 +48,94 @@ class SingleCampus extends React.Component {
     this.setState({ isClicked: true });
   }
 
-  handleDelete() {
-    this.props.thunkToDeleteACampusCreator(this.props.campus);
-    this.props.thunkToGetACampusCreator(this.props.match.params.campusId);
+  handleChange(event) {
+    this.setState({
+      [event.target.name]: event.target.value,
+    });
+  }
+
+  async handleAddStudentToCampus(event) {
+    event.preventDefault();
+
+    const studentToAdd = this.props.students.filter(
+      student => student.id === Number(this.state.studentToAddId)
+    );
+    await this.props.thunkToAddStudentToCampusCreator(
+      studentToAdd[0],
+      this.props.campus
+    );
+    await this.props.thunkToGetACampusCreator(this.props.campus.id);
+    this.setState({ studentToAddId: 0 });
   }
 
   render() {
-    const { campus } = this.props;
+    const { campus, students } = this.props;
 
     return campus !== undefined ? (
       <div id="aCampus">
-        <img className="imageLarge" src={campus.imageUrl} />
-        <h2>{campus.name}</h2>
-        <span>{campus.address}</span>
-        <hr />
-        <p>{campus.description}</p>
-        <hr />
+        <div className="aCampusInfo">
+          <img className="imageLarge" src={campus.imageUrl} />
+          <h2>{campus.name}</h2>
+          <span>{campus.address}</span>
+          <hr />
+          <p>{campus.description}</p>
+        </div>
 
-        <div id="aCampusInfo">
+        <div className="aCampusInfoExtra">
           <div id="aCampusInfoStudents">
-            <StudentsList students={campus.students} />
-          </div>
-          <div id="aCampusInfoButtons">
-            {this.state.isClicked === false ? (
-              <button
-                id="update"
-                type="submit"
-                name="updateCampus"
-                onClick={this.handleClick}
-              >
-                Update This Campus
-              </button>
-            ) : null}
-            {this.state.isClicked === true ? (
-              <ConnectedUpdateCampus campus={campus} />
-            ) : null}
-            <button
-              id="delete"
-              type="button"
-              name="deleteCampus"
-              onClick={this.handleDelete}
-            >
-              Delete This Campus
-            </button>
+            <div>
+              <StudentsList students={campus.students} />
+            </div>
+            <div>
+              <div id="Select-student-option">
+                <label htmlFor="Student-select">Select student:</label>
+                <select
+                  id="Student-select"
+                  name="studentToAddId"
+                  value={this.state.studentToAddId}
+                  onChange={this.handleChange}
+                >
+                  <List
+                    forEachOfThese={students}
+                    doThis={student => {
+                      return (
+                        <option key={student.id} value={student.id}>
+                          {student.fullName}
+                        </option>
+                      );
+                    }}
+                    unlessEmpty={() => <option>No students registered.</option>}
+                  />
+                </select>
+              </div>
+
+              <div>
+                <button
+                  id="submit"
+                  type="submit"
+                  name="addStudentToCampus"
+                  onClick={this.handleAddStudentToCampus}
+                >
+                  Add To Campus
+                </button>
+              </div>
+            </div>
+
+            <div className="aCampusInfoButtons">
+              {this.state.isClicked === false ? (
+                <button
+                  id="update"
+                  type="submit"
+                  name="updateCampus"
+                  onClick={this.handleClick}
+                >
+                  Update This Campus
+                </button>
+              ) : null}
+              {this.state.isClicked === true ? (
+                <ConnectedUpdateCampus campus={campus} />
+              ) : null}
+            </div>
           </div>
         </div>
       </div>

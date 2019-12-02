@@ -43,12 +43,15 @@ class UpdateCampus extends React.Component {
     });
   }
 
-  handleSubmit() {
-    this.props.thunkToUpdateACampusCreator(this.state);
+  async handleSubmit() {
+    const campusToUpdate = {};
+    Object.assign(campusToUpdate, this.props.campus, this.state);
+    await this.props.thunkToUpdateACampusCreator(campusToUpdate);
   }
 
   render() {
     const { errorMessage } = this.props;
+
     return (
       <CampusForm
         {...this.state}

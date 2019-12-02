@@ -6,7 +6,10 @@ const StudentsList = props => {
   const students = props.students || [];
   return (
     <div>
-      <h4>Students enrolled at this campus</h4>
+      <h4>
+        {students.length === 0 ? 'No' : students.length}
+        {' Students enrolled at this campus'}
+      </h4>
       <List
         forEachOfThese={students}
         doThis={student => {
