@@ -64,6 +64,17 @@ button#delete {
   align-self: center;
 }
 
+button#addTo {
+  margin: 0.5em;
+  padding: 0.5em;
+  background: blue;
+  color: white;
+  text-emphasis: bold;
+  font-size: 0.6em;
+  max-width: 100px;
+  align-self: center;
+}
+
 h4 {
   text-decoration: underline;
 }
@@ -173,7 +184,7 @@ h4 {
 .aCampusInfoStudents {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-evenly;
 }
 
 .aCampusInfoButtons {
@@ -182,16 +193,24 @@ h4 {
   justify-self: center;
 }
 
+#student-options {
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 #Select-student-option {
-  height: 4vmin;
-  margin: 10px;
-  /* color: darkblue; */
+  height: 5vmin;
+  margin: 20px;
   font-size: calc(5px + 2vmin);
 }
 
 select {
   height: 4vmin;
   font-weight: 700;
+  margin: 5px;
+  align-self: center;
 }
 
 #aStudentInfoButtons {

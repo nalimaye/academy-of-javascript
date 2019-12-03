@@ -86,7 +86,7 @@ class SingleCampus extends React.Component {
             <div>
               <StudentsList students={campus.students} />
             </div>
-            <div>
+            <div id="student-options">
               <div id="Select-student-option">
                 <label htmlFor="Student-select">Select student:</label>
                 <select
@@ -107,11 +107,9 @@ class SingleCampus extends React.Component {
                     unlessEmpty={() => <option>No students registered.</option>}
                   />
                 </select>
-              </div>
 
-              <div>
                 <button
-                  id="submit"
+                  id="addTo"
                   type="submit"
                   name="addStudentToCampus"
                   onClick={this.handleAddStudentToCampus}
