@@ -81,36 +81,14 @@ export const thunkToUpdateACampusCreator = function(campusToUpdate) {
     }
   };
 };
-export const thunkToAddStudentToCampusCreator = function(student, campus) {
+export const thunkToAddStudentToCampusCreator = function(studentToAddToCampus) {
   return async function(dispatch) {
     try {
-      const studentToAdd = {};
-      Object.assign(studentToAdd, student);
-      studentToAdd.campusId = campusToUpdate.id;
-
-      const campusToUpdate = {};
-      Object.assign(campusToUpdate, campus);
-      campusToUpdate.students.push(studentToAdd);
-
-      const responseStudent = await axios.put(
-        `/api/students/${studentToUpdate.id}`,
-        studentToUpdate
+      const { data } = await axios.put(
+        `/api/students/${studentToAddToCampus.id}`,
+        studentToAddToCampus
       );
-      const responseCampus = await axios.put(
-        `/api/campuses/${campusToUpdate.id}`,
-        campusToUpdate
-      );
-
-      // console.log(
-      //   'In thunkToAddStudentToCampusCreator, responseCampus.data : ',
-      //   responseCampus.data
-      // );
-      // console.log(
-      //   'In thunkToAddStudentToCampusCreator, responseStudent.data : ',
-      //   responseStudent.data
-      // );
-      dispatch(updatedAStudent(responseStudent.data));
-      dispatch(updatedACampus(responseCampus.data));
+      dispatch(updatedAStudent(data));
       dispatch(resetError());
     } catch (error) {
       dispatch(gotError(error.response.data));

@@ -20,8 +20,8 @@ const mapDispatchToProps = dispatch => {
   return {
     thunkToGetACampusCreator: campusId =>
       dispatch(thunkToGetACampusCreator(campusId)),
-    thunkToAddStudentToCampusCreator: (studentToAdd, campus) =>
-      dispatch(thunkToAddStudentToCampusCreator(studentToAdd, campus)),
+    thunkToAddStudentToCampusCreator: studentToAddToCampus =>
+      dispatch(thunkToAddStudentToCampusCreator(studentToAddToCampus)),
     thunkToGetStudentsCreator: () => dispatch(thunkToGetStudentsCreator()),
   };
 };
@@ -31,7 +31,7 @@ class SingleCampus extends React.Component {
     super();
     this.state = {
       isClicked: false,
-      studentToAddId: 0,
+      studentToAddId: 1,
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -56,16 +56,24 @@ class SingleCampus extends React.Component {
 
   async handleAddStudentToCampus(event) {
     event.preventDefault();
-
-    const studentToAdd = this.props.students.filter(
+    const aStudentToAdd = this.props.students.filter(
       student => student.id === Number(this.state.studentToAddId)
     );
-    await this.props.thunkToAddStudentToCampusCreator(
-      studentToAdd[0],
-      this.props.campus
+
+    const studentToAddToCampus = Object.fromEntries(
+      Object.entries(aStudentToAdd[0]).filter(
+        ([key, value]) => typeof value !== 'object'
+      )
     );
-    await this.props.thunkToGetACampusCreator(this.props.campus.id);
-    this.setState({ studentToAddId: 0 });
+    studentToAddToCampus.campusId = this.props.match.params.campusId;
+    // console.log(
+    //   'In handleAddStudentToCampus, studentToAddToCampus : ',
+    //   studentToAddToCampus
+    // );
+    await this.props.thunkToAddStudentToCampusCreator(studentToAddToCampus);
+    await this.props.thunkToGetACampusCreator(this.props.match.params.campusId);
+
+    this.setState();
   }
 
   render() {

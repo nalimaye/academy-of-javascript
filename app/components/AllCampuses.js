@@ -56,12 +56,16 @@ class AllCampuses extends React.Component {
 
                   <div className="list-item-campus-info">
                     <Link to={`/campuses/${campus.id}`}>{campus.name}</Link>
-                    <p>
-                      {campus.students.length === 0
-                        ? 'No'
-                        : campus.students.length}{' '}
-                      {campus.students.length === 1 ? 'student' : 'students'}
-                    </p>
+                    {campus.students !== undefined ? (
+                      <p>
+                        {campus.students.length === 0
+                          ? 'No'
+                          : campus.students.length}{' '}
+                        {campus.students.length === 1 ? 'student' : 'students'}
+                      </p>
+                    ) : (
+                      <p>No students</p>
+                    )}
                     <button
                       id="delete"
                       type="button"
