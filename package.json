@@ -30,7 +30,8 @@
     "redux-devtools-extension": "^2.13.7",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
-    "sequelize": "^4.44.3"
+    "sequelize": "^4.44.3",
+    "serialize-javascript": ">=2.1.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -46,7 +47,7 @@
     "eslint-plugin-react": "^7.8.2",
     "style-loader": "^0.21.0",
     "volleyball": "^1.5.1",
-    "webpack": "^4.8.3",
+    "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"
   }
 }
