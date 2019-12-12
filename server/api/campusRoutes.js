@@ -6,7 +6,12 @@ const Op = Sequelize.Op;
 router.get('/', async (req, res, next) => {
   try {
     const allCampuses = await Campus.findAll({
-      include: [Student],
+      include: [
+        {
+          model: Student,
+          required: false,
+        },
+      ],
     });
     res.json(allCampuses);
   } catch (error) {

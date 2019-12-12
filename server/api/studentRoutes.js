@@ -5,7 +5,14 @@ const Op = Sequelize.Op;
 
 router.get('/', async (req, res, next) => {
   try {
-    const allStudents = await Student.findAll();
+    const allStudents = await Student.findAll({
+      include: [
+        {
+          model: Campus,
+          required: false,
+        },
+      ],
+    });
     res.json(allStudents);
   } catch (error) {
     next(error);
@@ -18,7 +25,12 @@ router.get('/:studentId', async (req, res, next) => {
       where: {
         id: { [Op.eq]: req.params.studentId },
       },
-      include: [Campus],
+      include: [
+        {
+          model: Campus,
+          required: false,
+        },
+      ],
     });
     res.json(aStudent);
   } catch (error) {
