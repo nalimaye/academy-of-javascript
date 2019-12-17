@@ -41,8 +41,13 @@ export const thunkToGetCampusesCreator = function() {
 };
 export const thunkToGetACampusCreator = function(campusId) {
   return async function(dispatch) {
-    const { data } = await axios.get(`/api/campuses/${campusId}`);
-    dispatch(gotACampus(data[0]));
+    try {
+      const { data } = await axios.get(`/api/campuses/${campusId}`);
+      dispatch(gotACampus(data[0]));
+      dispatch(resetError());
+    } catch (error) {
+      dispatch(gotError(error.response.data));
+    }
   };
 };
 export const thunkToAddACampusCreator = function(newCampus) {
@@ -84,11 +89,15 @@ export const thunkToUpdateACampusCreator = function(campusToUpdate) {
 export const thunkToAddStudentToCampusCreator = function(studentToAddToCampus) {
   return async function(dispatch) {
     try {
-      const { data } = await axios.put(
+      const studentResponse = await axios.put(
         `/api/students/${studentToAddToCampus.id}`,
         studentToAddToCampus
       );
-      dispatch(updatedAStudent(data));
+      const campusResponse = await axios.get(
+        `/api/campuses/${studentToAddToCampus.campusId}`
+      );
+      dispatch(updatedAStudent(studentResponse.data));
+      dispatch(gotACampus(campusResponse.data[0]));
       dispatch(resetError());
     } catch (error) {
       dispatch(gotError(error.response.data));

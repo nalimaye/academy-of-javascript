@@ -26,7 +26,7 @@ const deletedAStudent = student => ({
   type: DELETED_A_STUDENT,
   student,
 });
-const updatedAStudent = student => ({
+export const updatedAStudent = student => ({
   type: UPDATED_A_STUDENT,
   student,
 });
