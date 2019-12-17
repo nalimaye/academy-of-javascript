@@ -136,7 +136,9 @@ function campusesReducer(state = initialState, action) {
     case DELETED_A_CAMPUS:
       return {
         ...state,
-        campuses: state.campuses.filter(campus => campus.id !== action.id),
+        campuses: state.campuses.filter(
+          campus => campus.id !== action.campusId
+        ),
       };
     case UPDATED_A_CAMPUS:
       return {

@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import {
   thunkToGetAStudentCreator,
   thunkToUpdateAStudentCreator,
-  thunkToDeleteAStudentCreator,
 } from '../reducers/studentsReducer';
 import { thunkToRemoveStudentFromCampusCreator } from '../reducers/campusesReducer';
 import ConnectedUpdateStudent from './UpdateStudent';
@@ -19,8 +18,6 @@ const mapDispatchToProps = dispatch => {
       dispatch(thunkToGetAStudentCreator(studentId)),
     thunkToUpdateAStudentCreator: studentToUpdate =>
       dispatch(thunkToUpdateAStudentCreator(studentToUpdate)),
-    thunkToDeleteAStudentCreator: studentToDelete =>
-      dispatch(thunkToDeleteAStudentCreator(studentToDelete)),
     thunkToRemoveStudentFromCampusCreator: (
       studentToRemoveFromCampus,
       campusId
@@ -41,7 +38,6 @@ class SingleStudent extends React.Component {
       isClicked: false,
     };
     this.handleClick = this.handleClick.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
     this.handleRemoveStudentFromCampus = this.handleRemoveStudentFromCampus.bind(
       this
     );
@@ -54,11 +50,6 @@ class SingleStudent extends React.Component {
   handleClick(event) {
     event.preventDefault();
     this.setState({ isClicked: true });
-  }
-
-  handleDelete() {
-    this.props.thunkToDeleteAStudentCreator(this.props.student);
-    this.props.thunkToGetAStudentCreator(this.props.match.params.studentId);
   }
 
   async handleRemoveStudentFromCampus() {
@@ -121,14 +112,6 @@ class SingleStudent extends React.Component {
           {this.state.isClicked === true ? (
             <ConnectedUpdateStudent student={student} />
           ) : null}
-          <button
-            id="delete"
-            type="button"
-            name="deleteStudent"
-            onClick={this.handleDelete}
-          >
-            Delete This Student
-          </button>
         </div>
       </div>
     ) : (

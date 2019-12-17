@@ -1,7 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { thunkToGetStudentsCreator } from '../reducers/studentsReducer';
+import {
+  thunkToGetStudentsCreator,
+  thunkToDeleteAStudentCreator,
+} from '../reducers/studentsReducer';
 import { List } from './utils';
 import ConnectedNewStudent from './NewStudent';
 
@@ -12,12 +15,25 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     thunkToGetStudentsCreator: () => dispatch(thunkToGetStudentsCreator()),
+    thunkToDeleteAStudentCreator: studentToDelete =>
+      dispatch(thunkToDeleteAStudentCreator(studentToDelete)),
   };
 };
 
 class AllStudents extends React.Component {
+  constructor() {
+    super();
+    this.handleDelete = this.handleDelete.bind(this);
+  }
+
   componentDidMount() {
     this.props.thunkToGetStudentsCreator();
+  }
+
+  async handleDelete(studentId) {
+    await this.props.thunkToDeleteAStudentCreator(studentId);
+    await this.props.thunkToGetStudentsCreator();
+    this.setState();
   }
 
   render() {
@@ -36,6 +52,14 @@ class AllStudents extends React.Component {
                     <img className="imageSmall" src={student.imageUrl} />
                     <p>{student.fullName}</p>
                   </Link>
+                  <button
+                    id="delete"
+                    type="button"
+                    name="deleteStudent"
+                    onClick={() => this.handleDelete(student.id)}
+                  >
+                    Delete
+                  </button>
                 </div>
               );
             }}

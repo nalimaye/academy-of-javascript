@@ -22,9 +22,9 @@ const addedAStudent = student => ({
   type: ADDED_A_STUDENT,
   student,
 });
-const deletedAStudent = student => ({
+const deletedAStudent = studentId => ({
   type: DELETED_A_STUDENT,
-  student,
+  studentId,
 });
 export const updatedAStudent = student => ({
   type: UPDATED_A_STUDENT,
@@ -55,11 +55,11 @@ export const thunkToAddAStudentCreator = function(newStudent) {
     }
   };
 };
-export const thunkToDeleteAStudentCreator = function(studentToDelete) {
+export const thunkToDeleteAStudentCreator = function(studentToDeleteId) {
   return async function(dispatch) {
     try {
-      await axios.delete(`/api/students/${studentToDelete.id}`);
-      dispatch(deletedAStudent(studentToDelete));
+      await axios.delete(`/api/students/${studentToDeleteId}`);
+      dispatch(deletedAStudent(studentToDeleteId));
       dispatch(resetError());
     } catch (error) {
       dispatch(gotError(error.response.data));
@@ -97,7 +97,7 @@ function studentsReducer(state = initialState, action) {
       return {
         ...state,
         students: state.students.filter(
-          student => student.id !== action.student.id
+          student => student.id !== action.studentId
         ),
       };
     case UPDATED_A_STUDENT:
