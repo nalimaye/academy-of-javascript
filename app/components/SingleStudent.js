@@ -6,6 +6,7 @@ import {
   thunkToUpdateAStudentCreator,
   thunkToDeleteAStudentCreator,
 } from '../reducers/studentsReducer';
+import { thunkToRemoveStudentFromCampusCreator } from '../reducers/campusesReducer';
 import ConnectedUpdateStudent from './UpdateStudent';
 
 const mapStateToProps = state => {
@@ -20,6 +21,16 @@ const mapDispatchToProps = dispatch => {
       dispatch(thunkToUpdateAStudentCreator(studentToUpdate)),
     thunkToDeleteAStudentCreator: studentToDelete =>
       dispatch(thunkToDeleteAStudentCreator(studentToDelete)),
+    thunkToRemoveStudentFromCampusCreator: (
+      studentToRemoveFromCampus,
+      campusId
+    ) =>
+      dispatch(
+        thunkToRemoveStudentFromCampusCreator(
+          studentToRemoveFromCampus,
+          campusId
+        )
+      ),
   };
 };
 
@@ -31,6 +42,9 @@ class SingleStudent extends React.Component {
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleRemoveStudentFromCampus = this.handleRemoveStudentFromCampus.bind(
+      this
+    );
   }
 
   componentDidMount() {
@@ -45,6 +59,22 @@ class SingleStudent extends React.Component {
   handleDelete() {
     this.props.thunkToDeleteAStudentCreator(this.props.student);
     this.props.thunkToGetAStudentCreator(this.props.match.params.studentId);
+  }
+
+  async handleRemoveStudentFromCampus() {
+    const studentToRemoveFromCampus = Object.fromEntries(
+      Object.entries(this.props.student).filter(
+        ([key, value]) => typeof value !== 'object'
+      )
+    );
+    studentToRemoveFromCampus.campusId = null;
+    await this.props.thunkToRemoveStudentFromCampusCreator(
+      studentToRemoveFromCampus,
+      this.props.student.campusId
+    );
+    await this.props.thunkToGetAStudentCreator(
+      this.props.match.params.studentId
+    );
   }
 
   render() {
@@ -64,6 +94,14 @@ class SingleStudent extends React.Component {
               <Link to={`/campuses/${student.campusId}`}>
                 {student.campus.name}
               </Link>
+              <button
+                id="removeFrom"
+                type="submit"
+                name="removeStudentFromCampus"
+                onClick={this.handleRemoveStudentFromCampus}
+              >
+                Remove From Campus
+              </button>
             </p>
           ) : (
             <p>Currently, this student is not registered to a campus.</p>

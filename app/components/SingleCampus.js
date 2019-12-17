@@ -1,11 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+
 import {
   thunkToGetACampusCreator,
   thunkToAddStudentToCampusCreator,
+  thunkToRemoveStudentFromCampusCreator,
 } from '../reducers/campusesReducer';
 import { thunkToGetStudentsCreator } from '../reducers/studentsReducer';
-import StudentsList from './StudentsList';
 import { List } from './utils';
 import ConnectedUpdateCampus from './UpdateCampus';
 
@@ -22,6 +24,16 @@ const mapDispatchToProps = dispatch => {
       dispatch(thunkToGetACampusCreator(campusId)),
     thunkToAddStudentToCampusCreator: studentToAddToCampus =>
       dispatch(thunkToAddStudentToCampusCreator(studentToAddToCampus)),
+    thunkToRemoveStudentFromCampusCreator: (
+      studentToRemoveFromCampus,
+      campusId
+    ) =>
+      dispatch(
+        thunkToRemoveStudentFromCampusCreator(
+          studentToRemoveFromCampus,
+          campusId
+        )
+      ),
     thunkToGetStudentsCreator: () => dispatch(thunkToGetStudentsCreator()),
   };
 };
@@ -36,6 +48,9 @@ class SingleCampus extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleAddStudentToCampus = this.handleAddStudentToCampus.bind(this);
+    this.handleRemoveStudentFromCampus = this.handleRemoveStudentFromCampus.bind(
+      this
+    );
   }
 
   componentDidMount() {
@@ -68,6 +83,23 @@ class SingleCampus extends React.Component {
     await this.props.thunkToAddStudentToCampusCreator(studentToAddToCampus);
   }
 
+  async handleRemoveStudentFromCampus(studentToRemoveId) {
+    const aStudentToRemove = this.props.students.filter(
+      student => student.id === Number(studentToRemoveId)
+    );
+
+    const studentToRemoveFromCampus = Object.fromEntries(
+      Object.entries(aStudentToRemove[0]).filter(
+        ([key, value]) => typeof value !== 'object'
+      )
+    );
+    studentToRemoveFromCampus.campusId = null;
+    await this.props.thunkToRemoveStudentFromCampusCreator(
+      studentToRemoveFromCampus,
+      this.props.campus.id
+    );
+  }
+
   render() {
     const { campus, students } = this.props;
 
@@ -83,8 +115,48 @@ class SingleCampus extends React.Component {
 
         <div className="aCampusInfoExtra">
           <div id="aCampusInfoStudents">
-            <div>
-              <StudentsList students={campus.students} />
+            <div id="aCampusInfoStudentsList">
+              <h4>
+                {campus.students === undefined
+                  ? 'No'
+                  : `${campus.students.length}`}
+                {' Students enrolled at this campus'}
+              </h4>
+              {campus.students !== undefined ? (
+                <List
+                  forEachOfThese={campus.students}
+                  doThis={student => {
+                    return (
+                      <div
+                        key={student.id}
+                        class="aCampusInfoStudentsList-item"
+                      >
+                        <Link to={`/students/${student.id}`}>
+                          <p>{student.fullName}</p>
+                        </Link>
+                        <button
+                          id="removeFrom"
+                          type="submit"
+                          name="removeStudentFromCampus"
+                          onClick={() =>
+                            this.handleRemoveStudentFromCampus(student.id)
+                          }
+                        >
+                          Remove From Campus
+                        </button>
+                      </div>
+                    );
+                  }}
+                  unlessEmpty={() => (
+                    <div>
+                      <p>
+                        Currently, there are no students registered at this
+                        campus.
+                      </p>
+                    </div>
+                  )}
+                />
+              ) : null}
             </div>
 
             <div id="student-options">

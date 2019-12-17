@@ -104,6 +104,25 @@ export const thunkToAddStudentToCampusCreator = function(studentToAddToCampus) {
     }
   };
 };
+export const thunkToRemoveStudentFromCampusCreator = function(
+  studentToRemoveFromCampus,
+  campusId
+) {
+  return async function(dispatch) {
+    try {
+      const studentResponse = await axios.put(
+        `/api/students/${studentToRemoveFromCampus.id}`,
+        studentToRemoveFromCampus
+      );
+      const campusResponse = await axios.get(`/api/campuses/${campusId}`);
+      dispatch(updatedAStudent(studentResponse.data));
+      dispatch(gotACampus(campusResponse.data[0]));
+      dispatch(resetError());
+    } catch (error) {
+      dispatch(gotError(error.response.data));
+    }
+  };
+};
 
 // Reducer
 function campusesReducer(state = initialState, action) {
