@@ -5,19 +5,30 @@ import {
   thunkToGetAStudentCreator,
   thunkToUpdateAStudentCreator,
 } from '../reducers/studentsReducer';
-import { thunkToRemoveStudentFromCampusCreator } from '../reducers/campusesReducer';
+import {
+  thunkToGetCampusesCreator,
+  thunkToAddStudentToCampusCreator,
+  thunkToRemoveStudentFromCampusCreator,
+} from '../reducers/campusesReducer';
+import { List } from './utils';
 import ConnectedUpdateStudent from './UpdateStudent';
 
 const mapStateToProps = state => {
-  return { student: state.studentsReducer.student };
+  return {
+    student: state.studentsReducer.student,
+    campuses: state.campusesReducer.campuses,
+  };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
+    thunkToGetCampusesCreator: () => dispatch(thunkToGetCampusesCreator()),
     thunkToGetAStudentCreator: studentId =>
       dispatch(thunkToGetAStudentCreator(studentId)),
     thunkToUpdateAStudentCreator: studentToUpdate =>
       dispatch(thunkToUpdateAStudentCreator(studentToUpdate)),
+    thunkToAddStudentToCampusCreator: studentToAddToCampus =>
+      dispatch(thunkToAddStudentToCampusCreator(studentToAddToCampus)),
     thunkToRemoveStudentFromCampusCreator: (
       studentToRemoveFromCampus,
       campusId
@@ -36,8 +47,11 @@ class SingleStudent extends React.Component {
     super();
     this.state = {
       isClicked: false,
+      campusToAddToId: 1,
     };
     this.handleClick = this.handleClick.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleAddStudentToCampus = this.handleAddStudentToCampus.bind(this);
     this.handleRemoveStudentFromCampus = this.handleRemoveStudentFromCampus.bind(
       this
     );
@@ -45,11 +59,31 @@ class SingleStudent extends React.Component {
 
   componentDidMount() {
     this.props.thunkToGetAStudentCreator(this.props.match.params.studentId);
+    this.props.thunkToGetCampusesCreator();
   }
 
   handleClick(event) {
     event.preventDefault();
     this.setState({ isClicked: true });
+  }
+
+  handleChange(event) {
+    this.setState({
+      [event.target.name]: event.target.value,
+    });
+  }
+
+  async handleAddStudentToCampus() {
+    const studentToAddToCampus = Object.fromEntries(
+      Object.entries(this.props.student).filter(
+        ([key, value]) => typeof value !== 'object'
+      )
+    );
+    studentToAddToCampus.campusId = this.state.campusToAddToId;
+    await this.props.thunkToAddStudentToCampusCreator(studentToAddToCampus);
+    await this.props.thunkToGetAStudentCreator(
+      this.props.match.params.studentId
+    );
   }
 
   async handleRemoveStudentFromCampus() {
@@ -69,7 +103,7 @@ class SingleStudent extends React.Component {
   }
 
   render() {
-    const { student } = this.props;
+    const { student, campuses } = this.props;
 
     return student !== undefined ? (
       <div id="aStudent">
@@ -95,7 +129,43 @@ class SingleStudent extends React.Component {
               </button>
             </p>
           ) : (
-            <p>Currently, this student is not registered to a campus.</p>
+            <div>
+              <p>Currently, this student is not registered to a campus.</p>
+              <div id="campus-options">
+                <div id="Select-campus-option">
+                  <label htmlFor="Campus-select">Select campus:</label>
+                  <select
+                    id="Campus-select"
+                    name="campusToAddToId"
+                    value={this.state.campusToAddToId}
+                    onChange={this.handleChange}
+                  >
+                    <List
+                      forEachOfThese={campuses}
+                      doThis={campus => {
+                        return (
+                          <option key={campus.id} value={campus.id}>
+                            {campus.name}
+                          </option>
+                        );
+                      }}
+                      unlessEmpty={() => (
+                        <option>No campuses registered.</option>
+                      )}
+                    />
+                  </select>
+
+                  <button
+                    id="addTo"
+                    type="submit"
+                    name="addStudentToCampus"
+                    onClick={this.handleAddStudentToCampus}
+                  >
+                    Add To Campus
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
         </div>
         <div id="aStudentInfoButtons">

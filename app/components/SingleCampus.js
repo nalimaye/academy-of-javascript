@@ -132,7 +132,10 @@ class SingleCampus extends React.Component {
                         class="aCampusInfoStudentsList-item"
                       >
                         <Link to={`/students/${student.id}`}>
-                          <p>{student.fullName}</p>
+                          <img className="imageTiny" src={student.imageUrl} />
+                          <span className="textImageTiny">
+                            {student.fullName}
+                          </span>
                         </Link>
                         <button
                           id="removeFrom"

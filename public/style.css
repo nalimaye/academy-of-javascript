@@ -131,7 +131,7 @@ h4 {
 
 #list-item-student {
   flex: 1 1 200px;
-  font-size: 1.3em;
+  font-size: 1.1em;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -150,6 +150,17 @@ h4 {
 .nav-item {
   margin: 20px;
   font-size: 1.2em;
+}
+
+.textImageTiny {
+  vertical-align: middle;
+  font-size: 1em;
+  margin: 10px;
+}
+
+.imageTiny {
+  max-width: 30px;
+  max-height: 30px;
 }
 
 .imageSmall {
@@ -206,7 +217,7 @@ h4 {
 
 .aCampusInfoStudentsList-item {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
 }
 
 .aCampusInfoButtons {
