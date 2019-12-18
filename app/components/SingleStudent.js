@@ -57,9 +57,16 @@ class SingleStudent extends React.Component {
     );
   }
 
-  componentDidMount() {
-    this.props.thunkToGetAStudentCreator(this.props.match.params.studentId);
-    this.props.thunkToGetCampusesCreator();
+  async componentDidMount() {
+    await this.props.thunkToGetAStudentCreator(
+      this.props.match.params.studentId
+    );
+    await this.props.thunkToGetCampusesCreator();
+    if (this.props.campuses.length > 0) {
+      this.setState({
+        campusToAddToId: this.props.campuses[0].id,
+      });
+    }
   }
 
   handleClick(event) {
@@ -160,6 +167,7 @@ class SingleStudent extends React.Component {
                     type="submit"
                     name="addStudentToCampus"
                     onClick={this.handleAddStudentToCampus}
+                    disabled={campuses.length === 0}
                   >
                     Add To Campus
                   </button>

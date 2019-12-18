@@ -35,8 +35,13 @@ const updatedACampus = campus => ({
 // Thunk Creator
 export const thunkToGetCampusesCreator = function() {
   return async function(dispatch) {
-    const { data } = await axios.get('/api/campuses');
-    dispatch(gotAllCampuses(data));
+    try {
+      const { data } = await axios.get('/api/campuses');
+      dispatch(gotAllCampuses(data));
+      dispatch(resetError());
+    } catch (error) {
+      dispatch(gotError(error.response.data));
+    }
   };
 };
 export const thunkToGetACampusCreator = function(campusId) {

@@ -53,9 +53,14 @@ class SingleCampus extends React.Component {
     );
   }
 
-  componentDidMount() {
-    this.props.thunkToGetACampusCreator(this.props.match.params.campusId);
-    this.props.thunkToGetStudentsCreator();
+  async componentDidMount() {
+    await this.props.thunkToGetACampusCreator(this.props.match.params.campusId);
+    await this.props.thunkToGetStudentsCreator();
+    if (this.props.students.length > 0) {
+      this.setState({
+        studentToAddId: this.props.students[0].id,
+      });
+    }
   }
 
   handleClick(event) {
@@ -130,7 +135,7 @@ class SingleCampus extends React.Component {
                     return (
                       <div
                         key={student.id}
-                        class="aCampusInfoStudentsList-item"
+                        className="aCampusInfoStudentsList-item"
                       >
                         <Link to={`/students/${student.id}`}>
                           <img className="imageTiny" src={student.imageUrl} />
@@ -190,6 +195,7 @@ class SingleCampus extends React.Component {
                   type="submit"
                   name="addStudentToCampus"
                   onClick={this.handleAddStudentToCampus}
+                  disabled={students.length === 0}
                 >
                   Add To Campus
                 </button>

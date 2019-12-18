@@ -59,12 +59,16 @@ class AllStudents extends React.Component {
                       {student.fullName}
                     </Link>
                     {student.campus !== null ? (
-                      <p>
-                        {'@ '}
-                        <Link to={`/campuses/${student.campus.id}`}>
-                          {student.campus.name}
-                        </Link>
-                      </p>
+                      student.campus !== undefined ? (
+                        <p>
+                          {'@ '}
+                          <Link to={`/campuses/${student.campus.id}`}>
+                            {student.campus.name}
+                          </Link>
+                        </p>
+                      ) : (
+                        <p> </p>
+                      )
                     ) : (
                       <p> </p>
                     )}

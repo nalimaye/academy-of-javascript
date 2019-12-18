@@ -34,14 +34,24 @@ export const updatedAStudent = student => ({
 // Thunk Creators
 export const thunkToGetStudentsCreator = function() {
   return async function(dispatch) {
-    const { data } = await axios.get('/api/students');
-    dispatch(gotAllStudents(data));
+    try {
+      const { data } = await axios.get('/api/students');
+      dispatch(gotAllStudents(data));
+      dispatch(resetError());
+    } catch (error) {
+      dispatch(gotError(error.response.data));
+    }
   };
 };
 export const thunkToGetAStudentCreator = function(studentId) {
   return async function(dispatch) {
-    const { data } = await axios.get(`/api/students/${studentId}`);
-    dispatch(gotAStudent(data[0]));
+    try {
+      const { data } = await axios.get(`/api/students/${studentId}`);
+      dispatch(gotAStudent(data[0]));
+      dispatch(resetError());
+    } catch (error) {
+      dispatch(gotError(error.response.data));
+    }
   };
 };
 export const thunkToAddAStudentCreator = function(newStudent) {

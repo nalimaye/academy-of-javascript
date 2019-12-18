@@ -26,8 +26,8 @@ class AllCampuses extends React.Component {
     this.handleDelete = this.handleDelete.bind(this);
   }
 
-  componentDidMount() {
-    this.props.thunkToGetCampusesCreator();
+  async componentDidMount() {
+    await this.props.thunkToGetCampusesCreator();
   }
 
   async handleDelete(campusId) {
