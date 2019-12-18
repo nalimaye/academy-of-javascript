@@ -26,8 +26,8 @@ class AllStudents extends React.Component {
     this.handleDelete = this.handleDelete.bind(this);
   }
 
-  componentDidMount() {
-    this.props.thunkToGetStudentsCreator();
+  async componentDidMount() {
+    await this.props.thunkToGetStudentsCreator();
   }
 
   async handleDelete(studentId) {
@@ -48,18 +48,35 @@ class AllStudents extends React.Component {
             doThis={student => {
               return (
                 <div id="list-item-student" key={student.id}>
-                  <Link to={`/students/${student.id}`}>
-                    <img className="imageSmall" src={student.imageUrl} />
-                    <p>{student.fullName}</p>
-                  </Link>
-                  <button
-                    id="delete"
-                    type="button"
-                    name="deleteStudent"
-                    onClick={() => this.handleDelete(student.id)}
-                  >
-                    Delete
-                  </button>
+                  <div className="list-item-student-image">
+                    <Link to={`/students/${student.id}`}>
+                      <img className="imageSmall" src={student.imageUrl} />
+                    </Link>
+                  </div>
+
+                  <div className="list-item-student-info">
+                    <Link to={`/students/${student.id}`}>
+                      {student.fullName}
+                    </Link>
+                    {student.campus !== null ? (
+                      <p>
+                        {'@ '}
+                        <Link to={`/campuses/${student.campus.id}`}>
+                          {student.campus.name}
+                        </Link>
+                      </p>
+                    ) : (
+                      <p> </p>
+                    )}
+                    <button
+                      id="delete"
+                      type="button"
+                      name="deleteStudent"
+                      onClick={() => this.handleDelete(student.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               );
             }}
