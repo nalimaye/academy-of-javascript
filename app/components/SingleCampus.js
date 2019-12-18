@@ -81,6 +81,7 @@ class SingleCampus extends React.Component {
     );
     studentToAddToCampus.campusId = this.props.campus.id;
     await this.props.thunkToAddStudentToCampusCreator(studentToAddToCampus);
+    this.setState({ studentToAddId: 1 });
   }
 
   async handleRemoveStudentFromCampus(studentToRemoveId) {

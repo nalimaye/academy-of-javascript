@@ -153,9 +153,8 @@ h4 {
 }
 
 .textImageTiny {
-  vertical-align: middle;
   font-size: 1em;
-  margin: 10px;
+  padding: 5px;
 }
 
 .imageTiny {
@@ -218,6 +217,7 @@ h4 {
 .aCampusInfoStudentsList-item {
   display: flex;
   justify-content: center;
+  margin: 10px;
 }
 
 .aCampusInfoButtons {
