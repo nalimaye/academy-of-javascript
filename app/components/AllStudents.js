@@ -95,7 +95,7 @@ class AllStudents extends React.Component {
         </div>
         <hr />
         <div id="add-new-student">
-          <ConnectedNewStudent />
+          <ConnectedNewStudent students={students} />
         </div>
       </div>
     );

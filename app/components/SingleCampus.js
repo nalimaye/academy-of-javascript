@@ -133,10 +133,7 @@ class SingleCampus extends React.Component {
   }
 
   render() {
-    const { campus, students } = this.props;
-
-    console.log('students: ', students);
-    console.log('remainingStudents: ', this.state.remainingStudents);
+    const { campus } = this.props;
 
     return campus !== undefined ? (
       <div id="aCampus">
