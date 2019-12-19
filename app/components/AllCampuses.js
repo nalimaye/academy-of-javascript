@@ -89,7 +89,7 @@ class AllCampuses extends React.Component {
         </div>
         <hr />
         <div id="add-new-campus">
-          <ConnectedNewCampus />
+          <ConnectedNewCampus campuses={campuses} />
         </div>
       </div>
     );

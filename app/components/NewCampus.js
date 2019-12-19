@@ -19,6 +19,7 @@ const defaultState = {
   address: '',
   imageUrl: '',
   description: '',
+  errorMsg: '',
 };
 
 class NewCampus extends React.Component {
@@ -27,6 +28,7 @@ class NewCampus extends React.Component {
     this.state = defaultState;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.checkForDuplicateName = this.checkForDuplicateName.bind(this);
   }
 
   handleChange(event) {
@@ -35,23 +37,40 @@ class NewCampus extends React.Component {
     });
   }
 
+  checkForDuplicateName(newCampus) {
+    const newName = newCampus.name;
+    const duplicate = this.props.campuses.filter(
+      campus => campus.name === newName
+    );
+    if (duplicate.length > 0) return true;
+    else return false;
+  }
+
   async handleSubmit(event) {
     event.preventDefault();
-
-    await this.props.thunkToAddACampusCreator(this.state);
-
-    const { errorMessage } = this.props;
-    if (errorMessage === '') {
-      this.setState(defaultState);
+    const newCampus = {
+      name: this.state.name,
+      address: this.state.address,
+      imageUrl: this.state.imageUrl,
+      description: this.state.description,
+    };
+    if (this.checkForDuplicateName(newCampus) === true) {
+      this.setState({ errorMsg: 'Campus with this name already exists.' });
+    } else {
+      await this.props.thunkToAddACampusCreator(newCampus);
+      if (this.props.errorMessage === '') {
+        this.setState(defaultState);
+      } else {
+        this.setState({ errorMsg: this.props.errorMessage });
+      }
     }
   }
 
   render() {
-    const { errorMessage } = this.props;
     return (
       <CampusForm
         {...this.state}
-        errorMessage={errorMessage}
+        errorMessage={this.state.errorMsg}
         handleChange={this.handleChange}
         handleSubmit={this.handleSubmit}
         buttonName="Add This Campus"
