@@ -44,6 +44,7 @@ class SingleCampus extends React.Component {
     this.state = {
       isClicked: false,
       studentToAddId: 1,
+      remainingStudents: [],
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -51,15 +52,39 @@ class SingleCampus extends React.Component {
     this.handleRemoveStudentFromCampus = this.handleRemoveStudentFromCampus.bind(
       this
     );
+    this.updateRemainingStudents = this.updateRemainingStudents.bind(this);
+  }
+
+  updateRemainingStudents() {
+    if (this.props.students.length > 0) {
+      const remainingStudents = this.props.students.filter(student => {
+        if (this.props.campus.students.length === 0) {
+          return student;
+        } else {
+          if (
+            this.props.campus.students.every(elem => elem.id !== student.id) ===
+            true
+          ) {
+            return student;
+          }
+        }
+      });
+      let studentToAddId = 1;
+      if (remainingStudents.length > 0) {
+        studentToAddId = remainingStudents[0].id;
+      }
+      this.setState({
+        remainingStudents,
+        studentToAddId,
+      });
+    }
   }
 
   async componentDidMount() {
     await this.props.thunkToGetACampusCreator(this.props.match.params.campusId);
     await this.props.thunkToGetStudentsCreator();
-    if (this.props.students.length > 0) {
-      this.setState({
-        studentToAddId: this.props.students[0].id,
-      });
+    if (this.props.campus !== undefined) {
+      this.updateRemainingStudents();
     }
   }
 
@@ -86,7 +111,7 @@ class SingleCampus extends React.Component {
     );
     studentToAddToCampus.campusId = this.props.campus.id;
     await this.props.thunkToAddStudentToCampusCreator(studentToAddToCampus);
-    this.setState({ studentToAddId: 1 });
+    this.updateRemainingStudents();
   }
 
   async handleRemoveStudentFromCampus(studentToRemoveId) {
@@ -104,10 +129,14 @@ class SingleCampus extends React.Component {
       studentToRemoveFromCampus,
       this.props.campus.id
     );
+    this.updateRemainingStudents();
   }
 
   render() {
     const { campus, students } = this.props;
+
+    console.log('students: ', students);
+    console.log('remainingStudents: ', this.state.remainingStudents);
 
     return campus !== undefined ? (
       <div id="aCampus">
@@ -178,7 +207,7 @@ class SingleCampus extends React.Component {
                   onChange={this.handleChange}
                 >
                   <List
-                    forEachOfThese={students}
+                    forEachOfThese={this.state.remainingStudents}
                     doThis={student => {
                       return (
                         <option key={student.id} value={student.id}>
@@ -186,7 +215,7 @@ class SingleCampus extends React.Component {
                         </option>
                       );
                     }}
-                    unlessEmpty={() => <option>No students registered.</option>}
+                    unlessEmpty={() => <option>No students to add.</option>}
                   />
                 </select>
 
@@ -195,7 +224,7 @@ class SingleCampus extends React.Component {
                   type="submit"
                   name="addStudentToCampus"
                   onClick={this.handleAddStudentToCampus}
-                  disabled={students.length === 0}
+                  disabled={this.state.remainingStudents.length === 0}
                 >
                   Add To Campus
                 </button>
