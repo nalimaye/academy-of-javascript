@@ -56,28 +56,28 @@ class UpdateStudent extends React.Component {
     });
   }
 
-  checkForDuplicateName(updatedStudent) {
+  checkForDuplicateName(studentToUpdate) {
     const newFullName =
-      updatedStudent.firstName + ' ' + updatedStudent.lastName;
+      studentToUpdate.firstName + ' ' + studentToUpdate.lastName;
     const duplicate = this.props.students.filter(
       student =>
-        student.fullName === newFullName && student.id !== updatedStudent.id
+        student.fullName === newFullName && student.id !== studentToUpdate.id
     );
     if (duplicate.length > 0) return true;
     else return false;
   }
 
-  checkForDuplicateEmail(updatedStudent) {
-    const newEmail = updatedStudent.email;
+  checkForDuplicateEmail(studentToUpdate) {
+    const newEmail = studentToUpdate.email;
     const duplicate = this.props.students.filter(
-      student => student.email === newEmail && student.id !== updatedStudent.id
+      student => student.email === newEmail && student.id !== studentToUpdate.id
     );
     if (duplicate.length > 0) return true;
     else return false;
   }
 
   async handleSubmit(event) {
-    const updatedStudent = {
+    const studentToUpdate = {
       id: this.state.id,
       firstName: this.state.firstName,
       lastName: this.state.lastName,
@@ -85,15 +85,14 @@ class UpdateStudent extends React.Component {
       imageUrl: this.state.imageUrl,
       gpa: this.state.gpa,
     };
-    if (this.checkForDuplicateName(updatedStudent) === true) {
+    if (this.checkForDuplicateName(studentToUpdate) === true) {
       event.preventDefault();
       this.setState({ errorMsg: 'Student with this name already exists.' });
-    } else if (this.checkForDuplicateEmail(updatedStudent) === true) {
+    } else if (this.checkForDuplicateEmail(studentToUpdate) === true) {
       event.preventDefault();
       this.setState({ errorMsg: 'This email address is already used.' });
     } else {
-      await this.props.thunkToUpdateAStudentCreator(updatedStudent);
-      console.log('updated');
+      await this.props.thunkToUpdateAStudentCreator(studentToUpdate);
       this.setState({ errorMsg: this.props.errorMessage });
     }
   }
