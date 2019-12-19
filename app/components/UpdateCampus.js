@@ -65,7 +65,7 @@ class UpdateCampus extends React.Component {
     else return false;
   }
 
-  async handleSubmit() {
+  async handleSubmit(event) {
     const campusToUpdate = {
       id: this.state.id,
       name: this.state.name,
