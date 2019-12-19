@@ -195,6 +195,12 @@ h4 {
   height: 100vh;
 }
 
+.aStudentInfo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
 #aCampus {
   width: 100vw;
   height: 100vh;

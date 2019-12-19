@@ -119,63 +119,71 @@ class SingleStudent extends React.Component {
         <p>Email: {student.email}</p>
         <p>GPA: {student.gpa}</p>
 
-        <div>
-          {student.campus !== undefined && student.campus !== null ? (
-            <p>
-              This student is registered to the campus:{' '}
-              <Link to={`/campuses/${student.campusId}`}>
-                {student.campus.name}
-              </Link>
-              <button
-                id="removeFrom"
-                type="submit"
-                name="removeStudentFromCampus"
-                onClick={this.handleRemoveStudentFromCampus}
-              >
-                Remove From Campus
-              </button>
-            </p>
-          ) : (
-            <div>
-              <p>Currently, this student is not registered to a campus.</p>
-              <div id="campus-options">
-                <div id="Select-campus-option">
-                  <label htmlFor="Campus-select">Select campus:</label>
-                  <select
-                    id="Campus-select"
-                    name="campusToAddToId"
-                    value={this.state.campusToAddToId}
-                    onChange={this.handleChange}
-                  >
-                    <List
-                      forEachOfThese={campuses}
-                      doThis={campus => {
-                        return (
-                          <option key={campus.id} value={campus.id}>
-                            {campus.name}
-                          </option>
-                        );
-                      }}
-                      unlessEmpty={() => (
-                        <option>No campuses registered.</option>
-                      )}
-                    />
-                  </select>
-
-                  <button
-                    id="addTo"
-                    type="submit"
-                    name="addStudentToCampus"
-                    onClick={this.handleAddStudentToCampus}
-                    disabled={campuses.length === 0}
-                  >
-                    Add To Campus
-                  </button>
-                </div>
+        {student.campus !== undefined && student.campus !== null ? (
+          <div>
+            <p>This student is registered to the campus:</p>
+            <div className="aStudentInfo">
+              <div>
+                <Link to={`/campuses/${student.campusId}`}>
+                  <img className="imageSmall" src={student.campus.imageUrl} />
+                </Link>
+              </div>
+              <div>
+                <Link to={`/campuses/${student.campusId}`}>
+                  <span className="textImageTiny">{student.campus.name}</span>
+                </Link>
+              </div>
+              <div>
+                <button
+                  id="removeFrom"
+                  type="submit"
+                  name="removeStudentFromCampus"
+                  onClick={this.handleRemoveStudentFromCampus}
+                >
+                  Remove From Campus
+                </button>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div>
+            <p>Currently, this student is not registered to a campus.</p>
+            <div id="campus-options">
+              <div id="Select-campus-option">
+                <label htmlFor="Campus-select">Select campus:</label>
+                <select
+                  id="Campus-select"
+                  name="campusToAddToId"
+                  value={this.state.campusToAddToId}
+                  onChange={this.handleChange}
+                >
+                  <List
+                    forEachOfThese={campuses}
+                    doThis={campus => {
+                      return (
+                        <option key={campus.id} value={campus.id}>
+                          {campus.name}
+                        </option>
+                      );
+                    }}
+                    unlessEmpty={() => <option>No campuses registered.</option>}
+                  />
+                </select>
+
+                <button
+                  id="addTo"
+                  type="submit"
+                  name="addStudentToCampus"
+                  onClick={this.handleAddStudentToCampus}
+                  disabled={campuses.length === 0}
+                >
+                  Add To Campus
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div id="aStudentInfoButtons">
           {this.state.isClicked === false ? (
             <button
