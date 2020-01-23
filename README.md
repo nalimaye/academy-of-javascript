@@ -24,6 +24,14 @@ Add New Campus          |    Update A Campus
 :-------------------------:|:-------------------------:
 <img src="media/CampusAddNewAndUpdate_Part1.gif"> | <img src="media/CampusAddNewAndUpdate_Part2.gif">
 
+Add Student To Campus          |    Remove Student From Campus
+:-------------------------:|:-------------------------:
+<img src="media/CampusAddRemoveStudents_Part1.gif"> | <img src="media/CampusAddRemoveStudents_Part2.gif">
+
 Add New Student          |    Update A Student
 :-------------------------:|:-------------------------:
 <img src="media/StudentAddNewAndUpdate_Part1.gif"> | <img src="media/StudentAddNewAndUpdate_Part2.gif">
+
+Add Student To Campus          |    Remove Student From Campus
+:-------------------------:|:-------------------------:
+<img src="media/StudentAddRemoveFromCampus_Part1.gif"> | <img src="media/StudentAddRemoveFromCampus_Part2.gif">
