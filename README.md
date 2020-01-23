@@ -34,4 +34,4 @@ Add New Student          |    Update A Student
 
 Add Student To Campus          |    Remove Student From Campus
 :-------------------------:|:-------------------------:
-<img src="media/StudentAddRemoveFromCampus_Part1.gif"> | <img src="media/StudentAddRemoveFromCampus_Part2.gif">
+<img src="media/StudentAddRemoveFromCampus_Part2.gif"> | <img src="media/StudentAddRemoveFromCampus_Part1.gif">
