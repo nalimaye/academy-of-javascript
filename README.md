@@ -19,3 +19,6 @@ This is a RESTful web platform that allows the CTO of the Margaret Hamilton Acad
 - React-Redux : to connect the React Components that display/mofify the Students & Campuses data to the Redux store.
 
 - Redux-Thunk : for handling Redux side effects logic that needs access to the Redux store, including the asynchronous logic to handle all the CRUD (Create, Read, Update & Delete) actions to be performed on the Students & Campuses data.
+
+
+<img src="media/CampusAddNewAndUpdate.gif" width="45%" height="45%"> | <img src="media/StudentAddNewAndUpdate.gif" width="45%" height="45%">
