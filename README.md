@@ -1,5 +1,8 @@
 # Academy of JavaScript
 
+### Try it out at :
+https://academy-of-javascript.herokuapp.com/
+
 ## The Premise
 
 This is a RESTful web platform that allows the CTO of the Margaret Hamilton Academy of JavaScript to manage the Students and Campuses of that Academy.
